@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KantinPintar - Solusi Cerdas Kantin Sekolah & Manajemen Keuangan Siswa</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#ecfdf5',
+                            100: '#d1fae5',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                            900: '#065f46',
+                        },
+                        amberCustom: {
+                            500: '#f59e0b',
+                            600: '#d97706'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts & FontAwesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased selection:bg-brand-500 selection:text-white">
+
+    <!-- Notifikasi Toast -->
+    <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-24 opacity-0 transition-all duration-300 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center gap-3 border border-slate-700">
+        <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400 text-lg"></i>
+        <span id="toast-msg" class="text-sm font-medium">Berhasil diproses!</span>
+    </div>
+
+    <!-- NAVBAR UTAMA -->
+    <nav class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-3 cursor-pointer" onclick="switchView('landing')">
+                <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-brand-600 to-emerald-400 flex items-center justify-center text-white shadow-lg shadow-brand-500/30">
+                    <i class="fa-solid fa-utensils text-xl"></i>
+                </div>
+                <div>
+                    <span class="text-xl font-extrabold bg-gradient-to-r from-brand-700 to-emerald-600 bg-clip-text text-transparent">KantinPintar</span>
+                    <span class="block text-[10px] uppercase font-bold tracking-widest text-slate-400">Smart School Canteen</span>
+                </div>
+            </div>
+            
+            <div class="hidden md:flex items-center gap-8 font-medium text-sm text-slate-600">
+                <a href="#features" class="hover:text-brand-600 transition">Fitur Utama</a>
+                <a href="#comparison" class="hover:text-brand-600 transition">Masalah & Solusi</a>
+                <a href="#presentation" class="hover:text-brand-600 transition">Pitch Deck</a>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <button onclick="openRoleModal()" class="bg-gradient-to-r from-brand-600 to-emerald-600 hover:from-brand-700 hover:to-emerald-700 text-white font-semibold px-5 py-2.5 rounded-xl shadow-md shadow-brand-500/20 hover:shadow-lg transition-all transform hover:-translate-y-0.5 text-sm flex items-center gap-2">
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                    <span>Simulasi Aplikasi</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- LANDING PAGE VIEW -->
+    <div id="landing-view" class="min-h-screen">
+        <!-- HERO SECTION -->
+        <header class="relative overflow-hidden pt-16 pb-24 lg:pt-24 lg:pb-32 bg-gradient-to-b from-brand-50/50 via-white to-slate-50">
+            <div class="absolute inset-0 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-100 text-brand-700 font-semibold text-xs mb-8 shadow-sm">
+                    <span class="flex h-2 w-2 rounded-full bg-brand-600 animate-pulse"></span>
+                    Solusi Terpadu Kantin & Keuangan Sekolah Modern 🏫
+                </div>
+                <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold text-slate-900 tracking-tight max-w-4xl mx-auto leading-tight">
+                    Satu Aplikasi, <span class="bg-gradient-to-r from-brand-600 to-emerald-600 bg-clip-text text-transparent">Banyak Masalah Sekolah</span> Selesai.
+                </h1>
+                <p class="mt-6 text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto font-normal">
+                    Atasi antrean panjang kantin, cegah siswa boros jajan, pantau kandungan gizi makanan, bantu kantin kelola stok tanpa rugi, dan berikan laporan transparan ke orang tua.
+                </p>
+                <div class="mt-10 flex flex-col sm:flex-row justify-center gap-4">
+                    <button onclick="openRoleModal()" class="bg-brand-600 hover:bg-brand-700 text-white font-bold px-8 py-4 rounded-2xl shadow-xl shadow-brand-500/30 text-base transition transform hover:-scale-105 flex items-center justify-center gap-3">
+                        <i class="fa-solid fa-play"></i>
+                        <span>Coba Simulasi Interaktif</span>
+                    </button>
+                    <a href="#comparison" class="bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 font-semibold px-8 py-4 rounded-2xl text-base transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-list-check text-brand-600"></i>
+                        <span>Lihat Tabel Masalah & Solusi</span>
+                    </a>
+                </div>
+
+                <!-- Preview Grid Cards -->
+                <div class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6 text-left max-w-5xl mx-auto">
+                    <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+                        <div class="w-12 h-12 rounded-2xl bg-brand-100 text-brand-600 flex items-center justify-center text-xl mb-4 font-bold">
+                            <i class="fa-solid fa-clock"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-900 text-lg mb-2">Bebas Antrean</h3>
+                        <p class="text-sm text-slate-600">Pesan makanan lewat HP sebelum istirahat. Makanan langsung siap diambil tanpa antre berjam-jam.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+                        <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center text-xl mb-4 font-bold">
+                            <i class="fa-solid fa-wallet"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-900 text-lg mb-2">Dompet & Limit Harian</h3>
+                        <p class="text-sm text-slate-600">Batasi jajan harian otomatis agar anak tidak boros dan terlatih disiplin finansial sejak dini.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+                        <div class="w-12 h-12 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center text-xl mb-4 font-bold">
+                            <i class="fa-solid fa-heart-pulse"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-900 text-lg mb-2">Info Gizi & Alergi</h3>
+                        <p class="text-sm text-slate-600">Transparansi kalori, kandungan gula, garam, dan peringatan alergi demi kesehatan optimal siswa.</p>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- FITUR LENGKAP -->
+        <section id="features" class="py-24 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900">8 Pilar Solusi KantinPintar</h2>
+                    <p class="mt-4 text-slate-600">Dirancang khusus untuk menyelesaikan seluruh problematika harian di lingkungan sekolah.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200">
+                        <div class="w-10 h-10 rounded-xl bg-brand-600 text-white flex items-center justify-center mb-4 text-sm font-bold">01</div>
+                        <h4 class="font-bold text-slate-900 mb-1">Pesan Sebelum Istirahat</h4>
+                        <p class="text-xs text-slate-600 leading-relaxed">Siswa pesan lewat aplikasi, kantin siapkan lebih dulu, tidak ada lagi siswa terlambat masuk kelas.</p>
+                    </div>
+                    <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200">
+                        <div class="w-10 h-10 rounded-xl bg-brand-600 text-white flex items-center justify-center mb-4 text-sm font-bold">02</div>
+                        <h4 class="font-bold text-slate-900 mb-1">Dompet Limit Harian</h4>
+                        <p class="text-xs text-slate-600 leading-relaxed">Atur batas maksimal pengeluaran harian (misal Rp10.000) agar uang jajan tidak habis mendadak.</p>
+                    </div>
+                    <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200">
+                        <div class="w-10 h-10 rounded-xl bg-brand-600 text-white flex items-center justify-center mb-4 text-sm font-bold">03</div>
+                        <h4 class="font-bold text-slate-900 mb-1">Catatan Otomatis</h4>
+                        <p class="text-xs text-slate-600 leading-relaxed">Setiap transaksi tercatat otomatis. Siswa tahu persis ke mana uang jajan mereka pergi.</p>
+                    </div>
+                    <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200">
+                        <div class="w-10 h-10 rounded-xl bg-brand-600 text-white flex items-center justify-center mb-4 text-sm font-bold">04</div>
+                        <h4 class="font-bold text-slate-900 mb-1">Rekomendasi Budget</h4>
+                        <p class="text-xs text-slate-600 leading-relaxed">Aplikasi merekomendasikan menu makanan terbaik sesuai sisa saldo dompet digital siswa.</p>
+                    </div>
+                    <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200">
+                        <div class="w-10 h-10 rounded-xl bg-brand-600 text-white flex items-center justify-center mb-4 text-sm font-bold">05</div>
+                        <h4 class="font-bold text-slate-900 mb-1">Info Gizi & Alergi</h4>
+                        <p class="text-xs text-slate-600 leading-relaxed">Detail kalori, gula, garam, dan sensor alergi demi keamanan dan kesehatan anak.</p>
+                    </div>
+                    <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200">
+                        <div class="w-10 h-10 rounded-xl bg-brand-600 text-white flex items-center justify-center mb-4 text-sm font-bold">06</div>
+                        <h4 class="font-bold text-slate-900 mb-1">Laporan Stok Kantin</h4>
+                        <p class="text-xs text-slate-600 leading-relaxed">Pedagang kantin melihat data menu terlaris dan prediksi stok agar terhindar dari kerugian.</p>
+                    </div>
+                    <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200">
+                        <div class="w-10 h-10 rounded-xl bg-brand-600 text-white flex items-center justify-center mb-4 text-sm font-bold">07</div>
+                        <h4 class="font-bold text-slate-900 mb-1">Diskon Makanan Surplus</h4>
+                        <p class="text-xs text-slate-600 leading-relaxed">Menjelang tutup, makanan sisa dijual murah agar tidak terbuang percuma.</p>
+                    </div>
+                    <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200">
+                        <div class="w-10 h-10 rounded-xl bg-brand-600 text-white flex items-center justify-center mb-4 text-sm font-bold">08</div>
+                        <h4 class="font-bold text-slate-900 mb-1">Ringkasan Orang Tua</h4>
+                        <p class="text-xs text-slate-600 leading-relaxed">Orang tua menerima laporan mingguan pengeluaran dan pola makan anak via WhatsApp/App.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TABEL PERBANDINGAN MASALAH DAN SOLUSI -->
+        <section id="comparison" class="py-24 bg-slate-50 border-y border-slate-200">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900">Tabel Masalah & Solusi KantinPintar</h2>
+                    <p class="mt-4 text-slate-600">Ringkasan lengkap kendala di sekolah beserta solusi nyata yang dihadirkan platform.</p>
+                </div>
+
+                <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-900 text-white text-xs sm:text-sm">
+                                    <th class="p-4 sm:p-5 font-bold w-16 text-center">No</th>
+                                    <th class="p-4 sm:p-5 font-bold">Masalah di Sekolah</th>
+                                    <th class="p-4 sm:p-5 font-bold">Solusi KantinPintar</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-200 text-sm">
+                                <tr class="hover:bg-slate-50">
+                                    <td class="p-4 text-center font-bold text-slate-400">1</td>
+                                    <td class="p-4 text-slate-700 font-medium">Antrean panjang di kantin & waktu istirahat habis</td>
+                                    <td class="p-4 text-brand-700 font-semibold"><i class="fa-solid fa-check text-emerald-500 mr-2"></i> Pesan makanan lewat aplikasi sebelum jam istirahat</td>
+                                </tr>
+                                <tr class="hover:bg-slate-50">
+                                    <td class="p-4 text-center font-bold text-slate-400">2</td>
+                                    <td class="p-4 text-slate-700 font-medium">Siswa boros uang jajan & kehabisan sebelum akhir minggu</td>
+                                    <td class="p-4 text-brand-700 font-semibold"><i class="fa-solid fa-check text-emerald-500 mr-2"></i> Dompet digital dengan limit harian otomatis</td>
+                                </tr>
+                                <tr class="hover:bg-slate-50">
+                                    <td class="p-4 text-center font-bold text-slate-400">3</td>
+                                    <td class="p-4 text-slate-700 font-medium">Tidak tahu uang jajan habis untuk apa (tanpa catatan)</td>
+                                    <td class="p-4 text-brand-700 font-semibold"><i class="fa-solid fa-check text-emerald-500 mr-2"></i> Catatan pengeluaran otomatis per transaksi</td>
+                                </tr>
+                                <tr class="hover:bg-slate-50">
+                                    <td class="p-4 text-center font-bold text-slate-400">4</td>
+                                    <td class="p-4 text-slate-700 font-medium">Bingung memilih makanan saat budget terbatas</td>
+                                    <td class="p-4 text-brand-700 font-semibold"><i class="fa-solid fa-check text-emerald-500 mr-2"></i> Rekomendasi menu cerdas sesuai sisa budget</td>
+                                </tr>
+                                <tr class="hover:bg-slate-50">
+                                    <td class="p-4 text-center font-bold text-slate-400">5</td>
+                                    <td class="p-4 text-slate-700 font-medium">Tidak tahu makanan sehat (terlalu banyak MSG / gula)</td>
+                                    <td class="p-4 text-brand-700 font-semibold"><i class="fa-solid fa-check text-emerald-500 mr-2"></i> Informasi gizi, kalori, dan peringatan alergi</td>
+                                </tr>
+                                <tr class="hover:bg-slate-50">
+                                    <td class="p-4 text-center font-bold text-slate-400">6</td>
+                                    <td class="p-4 text-slate-700 font-medium">Kantin salah stok (makanan tidak laku atau cepat habis)</td>
+                                    <td class="p-4 text-brand-700 font-semibold"><i class="fa-solid fa-check text-emerald-500 mr-2"></i> Dashboard laporan stok dan data penjualan real-time</td>
+                                </tr>
+                                <tr class="hover:bg-slate-50">
+                                    <td class="p-4 text-center font-bold text-slate-400">7</td>
+                                    <td class="p-4 text-slate-700 font-medium">Makanan sisa menumpuk dan terbuang di akhir hari</td>
+                                    <td class="p-4 text-brand-700 font-semibold"><i class="fa-solid fa-check text-emerald-500 mr-2"></i> Diskon makanan surplus jelang kantin tutup</td>
+                                </tr>
+                                <tr class="hover:bg-slate-50">
+                                    <td class="p-4 text-center font-bold text-slate-400">8</td>
+                                    <td class="p-4 text-slate-700 font-medium">Orang tua tidak tahu pola makan & pengeluaran anak</td>
+                                    <td class="p-4 text-brand-700 font-semibold"><i class="fa-solid fa-check text-emerald-500 mr-2"></i> Ringkasan laporan mingguan otomatis untuk orang tua</td>
+                                </tr>
+                                <tr class="hover:bg-slate-50">
+                                    <td class="p-4 text-center font-bold text-slate-400">9</td>
+                                    <td class="p-4 text-slate-700 font-medium">Tidak ada pelatihan disiplin & perencanaan keuangan</td>
+                                    <td class="p-4 text-brand-700 font-semibold"><i class="fa-solid fa-check text-emerald-500 mr-2"></i> Limit, catatan transparan, & target menabung</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PITCH DECK SECTION -->
+        <section id="presentation" class="py-24 bg-white">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <div class="bg-gradient-to-br from-brand-900 to-slate-900 text-white rounded-3xl p-8 sm:p-12 shadow-2xl relative overflow-hidden">
+                    <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,#10b98120,transparent)]"></div>
+                    <span class="px-4 py-1.5 rounded-full bg-brand-600/30 text-emerald-300 text-xs font-bold uppercase tracking-wider">Kalimat Singkat Presentasi</span>
+                    <h3 class="text-2xl sm:text-3xl font-extrabold mt-4 mb-6 leading-relaxed">
+                        &ldquo;KantinPintar adalah aplikasi yang bukan cuma untuk memesan makanan. Aplikasi ini membantu siswa mengatur uang jajan, memilih makanan sehat, dan mengurangi antrean.&rdquo;
+                    </h3>
+                    <p class="text-slate-300 text-sm sm:text-base max-w-2xl mx-auto mb-8">
+                        Kantin juga terbantu karena tidak salah stok. Orang tua jadi tahu pengeluaran anak. Jadi satu aplikasi, banyak masalah selesai!
+                    </p>
+                    <button onclick="openRoleModal()" class="bg-brand-500 hover:bg-brand-600 text-white font-bold px-8 py-4 rounded-2xl shadow-lg transition transform hover:-translate-y-1">
+                        Mulai Simulasi Aplikasi Sekarang 🚀
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="bg-slate-900 text-slate-400 py-12 border-t border-slate-800">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-brand-600 flex items-center justify-center text-white text-lg font-bold">
+                        <i class="fa-solid fa-utensils"></i>
+                    </div>
+                    <span class="font-bold text-white text-lg">KantinPintar &copy; 2026</span>
+                </div>
+                <p class="text-xs text-slate-500">Platform Digitalisasi Kantin Sekolah & Edukasi Finansial Pelajar.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- MODAL PEMILIHAN PERAN (ROLE SELECTOR) -->
+    <div id="role-modal" class="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-8 shadow-2xl border border-slate-200 transform transition-all">
+            <div class="flex justify-between items-center mb-6">
+                <div>
+                    <h3 class="text-2xl font-extrabold text-slate-900">Pilih Mode Simulasi Peran</h3>
+                    <p class="text-xs text-slate-500 mt-1">Rasakan pengalaman fitur KantinPintar dari berbagai sudut pandang pengguna.</p>
+                </div>
+                <button onclick="closeRoleModal()" class="w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <button onclick="selectRole('student')" class="p-5 rounded-2xl border-2 border-slate-200 hover:border-brand-600 hover:bg-brand-50/50 flex flex-col items-center text-center transition group">
+                    <div class="w-14 h-14 rounded-2xl bg-brand-100 text-brand-600 flex items-center justify-center text-2xl mb-3 group-hover:scale-110 transition">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                    </div>
+                    <h4 class="font-bold text-slate-900">Siswa</h4>
+                    <p class="text-[11px] text-slate-500 mt-1">Pesan makanan, dompet limit, riwayat & rekomendasi budget.</p>
+                </button>
+                <button onclick="selectRole('canteen')" class="p-5 rounded-2xl border-2 border-slate-200 hover:border-brand-600 hover:bg-brand-50/50 flex flex-col items-center text-center transition group">
+                    <div class="w-14 h-14 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center text-2xl mb-3 group-hover:scale-110 transition">
+                        <i class="fa-solid fa-store"></i>
+                    </div>
+                    <h4 class="font-bold text-slate-900">Kantin / Pedagang</h4>
+                    <p class="text-[11px] text-slate-500 mt-1">Kelola pesanan masuk, laporan stok, & diskon surplus.</p>
+                </button>
+                <button onclick="selectRole('parent')" class="p-5 rounded-2xl border-2 border-slate-200 hover:border-brand-600 hover:bg-brand-50/50 flex flex-col items-center text-center transition group">
+                    <div class="w-14 h-14 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center text-2xl mb-3 group-hover:scale-110 transition">
+                        <i class="fa-solid fa-user-shield"></i>
+                    </div>
+                    <h4 class="font-bold text-slate-900">Orang Tua</h4>
+                    <p class="text-[11px] text-slate-500 mt-1">Pantau saldo, atur limit harian, & laporan gizi anak.</p>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- APLIKASI WORKSPACE SIMULASI (DASHBOARD) -->
+    <div id="app-workspace" class="hidden min-h-screen flex flex-col bg-slate-100">
+        <!-- TOPBAR WORKSPACE -->
+        <header class="bg-white border-b border-slate-200 px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4 sticky top-0 z-30 shadow-sm">
+            <div class="flex items-center gap-4">
+                <button onclick="switchView('landing')" class="w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition" title="Kembali ke Beranda">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h2 class="font-extrabold text-slate-900 text-base sm:text-lg">Dashboard <span id="workspace-role-title" class="text-brand-600">Siswa</span></h2>
+                        <span id="role-badge" class="px-2.5 py-0.5 rounded-full bg-brand-100 text-brand-700 text-xs font-bold uppercase tracking-wider">Mode Siswa</span>
+                    </div>
+                    <p class="text-xs text-slate-500">Simulasi interaktif langsung fitur KantinPintar</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <button onclick="openRoleModal()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition flex items-center gap-2">
+                    <i class="fa-solid fa-users-gear"></i>
+                    <span>Ganti Peran</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- CONTAINER KONTEN UTAMA BERDASARKAN PERAN -->
+        <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-8">
+
+            <!-- 1. DASHBOARD SISWA -->
+            <div id="view-student" class="space-y-6">
+                <!-- Baris Dompet & Limit -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-gradient-to-br from-brand-600 to-emerald-700 text-white rounded-3xl p-6 shadow-lg flex flex-col justify-between">
+                        <div>
+                            <span class="text-xs font-semibold uppercase tracking-wider text-emerald-200">Saldo Dompet Digital</span>
+                            <div id="student-balance-display" class="text-3xl font-black mt-1">Rp 35.000</div>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-emerald-500/40 flex justify-between items-center text-xs">
+                            <span>Limit Harian: <strong id="student-limit-display">Rp 15.000</strong></span>
+                            <span class="bg-emerald-500/30 px-2.5 py-1 rounded-full font-bold">Terpakai: <span id="student-spent-display">Rp 0</span></span>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200 flex flex-col justify-between">
+                        <div>
+                            <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Rekomendasi Menu Sesuai Budget</span>
+                            <h4 id="rec-menu-title" class="text-lg font-bold text-slate-800 mt-1">Nasi Ayam Geprek Sehat + Buah</h4>
+                            <p id="rec-menu-desc" class="text-xs text-slate-500 mt-1">Sisa budget hari ini aman! Kalori terkontrol & rendah MSG.</p>
+                        </div>
+                        <div class="mt-4 flex items-center justify-between text-xs font-bold text-brand-600">
+                            <span id="rec-menu-price">Rp 12.000</span>
+                            <button onclick="orderRecommendedMenu()" class="bg-brand-50 hover:bg-brand-100 px-3 py-1.5 rounded-xl transition">Pesan Cepat</button>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200 flex flex-col justify-between">
+                        <div>
+                            <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Status Status Antrean Kantin</span>
+                            <div class="flex items-center gap-3 mt-2">
+                                <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold">
+                                    <i class="fa-solid fa-bolt"></i>
+                                </div>
+                                <div>
+                                    <span class="block font-bold text-slate-800 text-sm">Anti-Antre Aktif</span>
+                                    <span class="text-xs text-emerald-600 font-medium">Makanan siap tepat jam istirahat</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-slate-100 text-[11px] text-slate-500 flex justify-between">
+                            <span>Estimasi Ambil: <strong>10.00 WIB</strong></span>
+                            <span class="text-brand-600 font-bold">No. Pesanan: #KP-882</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Katalog Menu Kantin & Detail Gizi -->
+                <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-200">
+                    <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6 pb-6 border-b border-slate-100">
+                        <div>
+                            <h3 class="text-xl font-extrabold text-slate-900">Katalog Menu KantinPintar</h3>
+                            <p class="text-xs text-slate-500">Pesan langsung lewat HP sebelum jam istirahat tiba.</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-semibold text-slate-600">Keranjang: <strong id="cart-count" class="text-brand-600">0 Item</strong></span>
+                            <button onclick="checkoutCart()" class="bg-brand-600 hover:bg-brand-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow-md">
+                                Bayar Pesanan
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="menu-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Menu Items loaded by JS -->
+                    </div>
+                </div>
+
+                <!-- Catatan Pengeluaran Otomatis & Riwayat -->
+                <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-200">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-lg font-extrabold text-slate-900">Catatan Pengeluaran Otomatis</h3>
+                        <span class="text-xs text-slate-500">Tercatat real-time oleh sistem</span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead>
+                                <tr class="bg-slate-50 text-slate-500 text-xs uppercase">
+                                    <th class="p-3">Waktu</th>
+                                    <th class="p-3">Menu Dipesan</th>
+                                    <th class="p-3">Kategori Gizi</th>
+                                    <th class="p-3 text-right">Harga</th>
+                                </tr>
+                            </thead>
+                            <tbody id="transaction-history" class="divide-y divide-slate-100 font-medium">
+                                <tr>
+                                    <td class="p-3 text-xs text-slate-400">Kemarin, 09:45</td>
+                                    <td class="p-3 text-slate-700">Es Teh Manis + Roti Bakar</td>
+                                    <td class="p-3"><span class="px-2 py-1 bg-amber-100 text-amber-700 rounded text-xs">Tinggi Gula</span></td>
+                                    <td class="p-3 text-right font-bold text-slate-800">Rp 8.000</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. DASHBOARD KANTIN / PEDAGANG -->
+            <div id="view-canteen" class="hidden space-y-6">
+                <!-- Statistik Kantin -->
+                <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+                    <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+                        <span class="text-xs font-bold text-slate-400 uppercase">Pesanan Masuk</span>
+                        <div class="text-3xl font-extrabold text-slate-900 mt-1">24 Porsi</div>
+                        <span class="text-xs text-emerald-600 font-semibold mt-2 block"><i class="fa-solid fa-arrow-up"></i> Siap disiapkan</span>
+                    </div>
+                    <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+                        <span class="text-xs font-bold text-slate-400 uppercase">Menu Paling Laku</span>
+                        <div class="text-lg font-extrabold text-brand-600 mt-1">Nasi Ayam Geprek</div>
+                        <span class="text-xs text-slate-500 mt-2 block">18 porsi terjual hari ini</span>
+                    </div>
+                    <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+                        <span class="text-xs font-bold text-slate-400 uppercase">Pendapatan Hari Ini</span>
+                        <div class="text-3xl font-extrabold text-slate-900 mt-1">Rp 340.000</div>
+                        <span class="text-xs text-emerald-600 font-semibold mt-2 block"><i class="fa-solid fa-circle-check"></i> Stabil & Aman</span>
+                    </div>
+                    <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+                        <span class="text-xs font-bold text-slate-400 uppercase">Makanan Surplus</span>
+                        <div class="text-3xl font-extrabold text-amber-600 mt-1">5 Porsi</div>
+                        <span class="text-xs text-amber-600 font-semibold mt-2 block">Diskon jelang tutup aktif</span>
+                    </div>
+                </div>
+
+                <!-- Manajemen Pesanan & Stok -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-200">
+                        <h3 class="text-lg font-extrabold text-slate-900 mb-4 flex items-center justify-between">
+                            <span>Antrean Pesanan Masuk</span>
+                            <span class="text-xs bg-brand-100 text-brand-700 px-3 py-1 rounded-full font-bold">Live Order</span>
+                        </h3>
+                        <div class="space-y-3">
+                            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex justify-between items-center">
+                                <div>
+                                    <strong class="text-sm text-slate-900 block">Nasi Ayam Geprek Sehat (x1)</strong>
+                                    <span class="text-xs text-slate-500">Pemesan: Budi (Kelas 8A) • Jam Istirahat 1</span>
+                                </div>
+                                <button onclick="completeOrder(this)" class="bg-brand-600 hover:bg-brand-700 text-white px-3 py-1.5 rounded-xl text-xs font-bold transition">Siap Diambil</button>
+                            </div>
+                            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex justify-between items-center">
+                                <div>
+                                    <strong class="text-sm text-slate-900 block">Soto Ayam Hangat (x1)</strong>
+                                    <span class="text-xs text-slate-500">Pemesan: Siti (Kelas 9B) • Jam Istirahat 1</span>
+                                </div>
+                                <button onclick="completeOrder(this)" class="bg-brand-600 hover:bg-brand-700 text-white px-3 py-1.5 rounded-xl text-xs font-bold transition">Siap Diambil</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-200">
+                        <h3 class="text-lg font-extrabold text-slate-900 mb-4 flex items-center justify-between">
+                            <span>Laporan Stok & Prediksi Besok</span>
+                            <span class="text-xs bg-amber-100 text-amber-700 px-3 py-1 rounded-full font-bold">AI Prediction</span>
+                        </h3>
+                        <div class="space-y-3 text-sm">
+                            <div class="flex justify-between items-center p-3 rounded-xl bg-slate-50 border border-slate-100">
+                                <span class="font-medium text-slate-700">Nasi Ayam Geprek</span>
+                                <span class="font-bold text-brand-600">Stok: 25 Porsi (Laris)</span>
+                            </div>
+                            <div class="flex justify-between items-center p-3 rounded-xl bg-slate-50 border border-slate-100">
+                                <span class="font-medium text-slate-700">Soto Ayam</span>
+                                <span class="font-bold text-brand-600">Stok: 15 Porsi (Stabil)</span>
+                            </div>
+                            <div class="flex justify-between items-center p-3 rounded-xl bg-slate-50 border border-slate-100">
+                                <span class="font-medium text-slate-700">Es Jeruk Murni</span>
+                                <span class="font-bold text-amber-600">Surplus 4 Porsi (Diskon 50%)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. DASHBOARD ORANG TUA -->
+            <div id="view-parent" class="hidden space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200">
+                        <span class="text-xs font-bold text-slate-400 uppercase">Anak Terhubung</span>
+                        <div class="flex items-center gap-3 mt-3">
+                            <div class="w-12 h-12 rounded-2xl bg-brand-100 text-brand-700 font-bold flex items-center justify-center text-xl">BS</div>
+                            <div>
+                                <h4 class="font-bold text-slate-900">Budi Santoso</h4>
+                                <p class="text-xs text-slate-500">Kelas 8A • SMP Negeri 1 Nusantara</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200 flex flex-col justify-between">
+                        <div>
+                            <span class="text-xs font-bold text-slate-400 uppercase">Kontrol Limit Harian Jajan</span>
+                            <p class="text-xs text-slate-500 mt-1">Batasi pengeluaran harian anak agar tidak boros.</p>
+                        </div>
+                        <div class="mt-4 flex items-center gap-3">
+                            <input type="number" id="parent-limit-input" value="15000" class="px-4 py-2 rounded-xl border border-slate-300 w-full text-sm font-bold">
+                            <button onclick="updateParentLimit()" class="bg-brand-600 hover:bg-brand-700 text-white px-5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition">Simpan Limit</button>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200 flex flex-col justify-between">
+                        <div>
+                            <span class="text-xs font-bold text-slate-400 uppercase">Top-Up Saldo Dompet Anak</span>
+                            <p class="text-xs text-slate-500 mt-1">Isi saldo jajan mingguan secara instan.</p>
+                        </div>
+                        <div class="mt-4 flex gap-2">
+                            <button onclick="topUpBalance(20000)" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 py-2 rounded-xl text-xs font-bold transition">+20rb</button>
+                            <button onclick="topUpBalance(50000)" class="flex-1 bg-brand-50 hover:bg-brand-100 text-brand-700 py-2 rounded-xl text-xs font-bold transition">+50rb</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Laporan Mingguan & Pola Makan Orang Tua -->
+                <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-200">
+                    <h3 class="text-lg font-extrabold text-slate-900 mb-4">Ringkasan Mingguan untuk Orang Tua</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200">
+                            <h4 class="font-bold text-slate-800 text-sm mb-3 flex items-center gap-2">
+                                <i class="fa-solid fa-chart-pie text-brand-600"></i> Analisis Pola Makan Anak
+                            </h4>
+                            <ul class="space-y-2 text-xs text-slate-600">
+                                <li class="flex justify-between py-1 border-b border-slate-200"><span>Makanan Tinggi Serat & Gizi:</span> <strong class="text-emerald-600">75% (Sangat Baik)</strong></li>
+                                <li class="flex justify-between py-1 border-b border-slate-200"><span>Minuman Manis / Soda:</span> <strong class="text-amber-600">25% (Terkontrol)</strong></li>
+                                <li class="flex justify-between py-1"><span>Riwayat Alergi Terdeteksi:</span> <strong class="text-emerald-600">Aman (Tanpa Alergi)</strong></li>
+                            </ul>
+                        </div>
+                        <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200">
+                            <h4 class="font-bold text-slate-800 text-sm mb-3 flex items-center gap-2">
+                                <i class="fa-solid fa-wallet text-brand-600"></i> Statistik Keuangan Minggu Ini
+                            </h4>
+                            <ul class="space-y-2 text-xs text-slate-600">
+                                <li class="flex justify-between py-1 border-b border-slate-200"><span>Total Uang Jajan Masuk:</span> <strong class="text-slate-900">Rp 75.000</strong></li>
+                                <li class="flex justify-between py-1 border-b border-slate-200"><span>Total Terpakai:</span> <strong class="text-slate-900">Rp 40.000</strong></li>
+                                <li class="flex justify-between py-1"><span>Sisa Saldo Anak:</span> <strong class="text-brand-600">Rp 35.000</strong></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- SCRIPT APLIKASI KANTINPINTAR -->
+    <script>
+        // State Global Aplikasi
+        let appState = {
+            role: 'student',
+            balance: 35000,
+            dailyLimit: 15000,
+            dailySpent: 0,
+            cart: [],
+            transactions: [
+                { time: 'Kemarin, 09:45', name: 'Es Teh Manis + Roti Bakar', category: 'Tinggi Gula', price: 8000 }
+            ]
+        };
+
+        // Katalog Menu Kantin
+        const menuItems = [
+            { id: 1, name: 'Nasi Ayam Geprek Sehat', price: 12000, calories: '450 kkal', sugar: 'Rendah', salt: 'Sedang', allergy: 'Tidak ada', desc: 'Ayam dada dada panggang, sambal bawang segar, dan lalapan.', badge: 'Rekomendasi Utama', icon: 'fa-drumstick-bite' },
+            { id: 2, name: 'Soto Ayam Hangat Kuah Kuning', price: 10000, calories: '380 kkal', sugar: 'Rendah', salt: 'Rendah', allergy: 'Tanpa MSG Berlebih', desc: 'Soto kuah rempah asli dengan suwiran ayam kampung dan kentang.', badge: 'Favorit Siswa', icon: 'fa-bowl-food' },
+            { id: 3, name: 'Gado-Gado Sayur Segar', price: 9000, calories: '310 kkal', sugar: 'Rendah', salt: 'Rendah', allergy: 'Kacang', desc: 'Aneka sayuran rebus segar disiram bumbu kacang gurih bernutrisi.', badge: 'Menu Sehat', icon: 'fa-carrot' },
+            { id: 4, name: 'Es Jeruk Murni Peras Asli', price: 5000, calories: '120 kkal', sugar: 'Sedang', salt: 'Bebas Garam', allergy: 'Tidak ada', desc: 'Jeruk peras murni kaya Vitamin C tanpa pemanis buatan berlebih.', badge: 'Minuman Segar', icon: 'fa-glass-water' }
+        ];
+
+        // Navigasi Tampilan Landing vs Workspace
+        function switchView(view) {
+            const landing = document.getElementById('landing-view');
+            const workspace = document.getElementById('app-workspace');
+            if (view === 'landing') {
+                landing.classList.remove('hidden');
+                workspace.classList.add('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+                landing.classList.add('hidden');
+                workspace.classList.remove('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                renderStudentWorkspace();
+            }
+        }
+
+        // Modal Peran
+        function openRoleModal() {
+            document.getElementById('role-modal').classList.remove('hidden');
+        }
+
+        function closeRoleModal() {
+            document.getElementById('role-modal').classList.add('hidden');
+        }
+
+        function selectRole(role) {
+            appState.role = role;
+            closeRoleModal();
+            switchView('workspace');
+
+            const viewStudent = document.getElementById('view-student');
+            const viewCanteen = document.getElementById('view-canteen');
+            const viewParent = document.getElementById('view-parent');
+            const roleTitle = document.getElementById('workspace-role-title');
+            const roleBadge = document.getElementById('role-badge');
+
+            viewStudent.classList.add('hidden');
+            viewCanteen.classList.add('hidden');
+            viewParent.classList.add('hidden');
+
+            if (role === 'student') {
+                viewStudent.classList.remove('hidden');
+                roleTitle.innerText = "Siswa";
+                roleBadge.innerText = "Mode Siswa";
+                renderStudentWorkspace();
+            } else if (role === 'canteen') {
+                viewCanteen.classList.remove('hidden');
+                roleTitle.innerText = "Kantin & Pedagang";
+                roleBadge.innerText = "Mode Kantin";
+            } else if (role === 'parent') {
+                viewParent.classList.remove('hidden');
+                roleTitle.innerText = "Orang Tua";
+                roleBadge.innerText = "Mode Orang Tua";
+            }
+        }
+
+        // Render Menu Siswa
+        function renderStudentWorkspace() {
+            document.getElementById('student-balance-display').innerText = formatRupiah(appState.balance);
+            document.getElementById('student-limit-display').innerText = formatRupiah(appState.dailyLimit);
+            document.getElementById('student-spent-display').innerText = formatRupiah(appState.dailySpent);
+
+            const grid = document.getElementById('menu-grid');
+            grid.innerHTML = '';
+
+            menuItems.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "bg-slate-50 p-5 rounded-2xl border border-slate-200 flex flex-col justify-between hover:border-brand-500 transition";
+                card.innerHTML = `
+                    <div>
+                        <div class="flex justify-between items-start mb-3">
+                            <span class="px-2.5 py-1 bg-brand-100 text-brand-700 text-[10px] font-bold uppercase rounded-full">${item.badge}</span>
+                            <span class="text-xs font-bold text-slate-500"><i class="fa-solid fa-fire text-amber-500 mr-1"></i>${item.calories}</span>
+                        </div>
+                        <h4 class="font-bold text-slate-900 text-base mb-1">${item.name}</h4>
+                        <p class="text-xs text-slate-600 mb-4">${item.desc}</p>
+                        
+                        <div class="bg-white p-3 rounded-xl border border-slate-200 mb-4 text-[11px] space-y-1 text-slate-600">
+                            <div><strong>Gula:</strong> ${item.sugar} | <strong>Garam:</strong> ${item.salt}</div>
+                            <div><strong>Alergi Info:</strong> <span class="text-brand-700 font-medium">${item.allergy}</span></div>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between pt-3 border-t border-slate-200">
+                        <span class="font-extrabold text-slate-900 text-base">${formatRupiah(item.price)}</span>
+                        <button onclick="addToCart(${item.id})" class="bg-brand-600 hover:bg-brand-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm">
+                            <i class="fa-solid fa-plus mr-1"></i> Pesan
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+
+            renderTransactions();
+        }
+
+        function addToCart(id) {
+            const item = menuItems.find(m => m.id === id);
+            if (!item) return;
+
+            // Cek Limit Harian
+            if (appState.dailySpent + item.price > appState.dailyLimit) {
+                showToast("Limit harian jajan tidak mencukupi! Minta orang tua menaikkan limit.", "error");
+                return;
+            }
+
+            // Cek Saldo
+            if (appState.balance < item.price) {
+                showToast("Saldo dompet digital tidak cukup!", "error");
+                return;
+            }
+
+            appState.cart.push(item);
+            document.getElementById('cart-count').innerText = `${appState.cart.length} Item`;
+            showToast(`${item.name} ditambahkan ke keranjang pesan!`);
+        }
+
+        function checkoutCart() {
+            if (appState.cart.length === 0) {
+                showToast("Keranjang masih kosong!", "error");
+                return;
+            }
+
+            let total = appState.cart.reduce((sum, i) => sum + i.price, 0);
+
+            if (appState.dailySpent + total > appState.dailyLimit) {
+                showToast("Melebihi batas limit harian jajan!", "error");
+                return;
+            }
+
+            appState.balance -= total;
+            appState.dailySpent += total;
+
+            appState.cart.forEach(item => {
+                appState.transactions.unshift({
+                    time: 'Hari ini, ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                    name: item.name,
+                    category: item.sugar === 'Rendah' ? 'Sehat & Bernutrisi' : 'Tinggi Gula/MSG',
+                    price: item.price
+                });
+            });
+
+            appState.cart = [];
+            document.getElementById('cart-count').innerText = `0 Item`;
+            renderStudentWorkspace();
+            showToast("Pesanan berhasil! Makanan disiapkan tanpa perlu antre 🎉");
+        }
+
+        function orderRecommendedMenu() {
+            const recItem = menuItems[0];
+            addToCart(recItem.id);
+            checkoutCart();
+        }
+
+        function renderTransactions() {
+            const tbody = document.getElementById('transaction-history');
+            tbody.innerHTML = '';
+            appState.transactions.forEach(tx => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="p-3 text-xs text-slate-400">${tx.time}</td>
+                    <td class="p-3 text-slate-700">${tx.name}</td>
+                    <td class="p-3"><span class="px-2 py-1 bg-brand-100 text-brand-700 rounded text-xs font-semibold">${tx.category}</span></td>
+                    <td class="p-3 text-right font-bold text-slate-800">${formatRupiah(tx.price)}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function updateParentLimit() {
+            const val = parseInt(document.getElementById('parent-limit-input').value);
+            if (isNaN(val) || val <= 0) {
+                showToast("Masukkan angka limit yang valid!", "error");
+                return;
+            }
+            appState.dailyLimit = val;
+            showToast(`Limit harian berhasil diubah menjadi ${formatRupiah(val)}!`);
+            renderStudentWorkspace();
+        }
+
+        function topUpBalance(amount) {
+            appState.balance += amount;
+            showToast(`Berhasil top-up saldo sebesar ${formatRupiah(amount)}!`);
+            renderStudentWorkspace();
+        }
+
+        function completeOrder(btn) {
+            btn.innerText = "Selesai Diambil ✓";
+            btn.className = "bg-slate-200 text-slate-600 px-3 py-1.5 rounded-xl text-xs font-bold cursor-not-allowed";
+            showToast("Status pesanan diperbarui menjadi siap diambil siswa.");
+        }
+
+        function formatRupiah(num) {
+            return 'Rp ' + num.toLocaleString('id-ID');
+        }
+
+        function showToast(msg, type = 'success') {
+            const toast = document.getElementById('toast');
+            const msgEl = document.getElementById('toast-msg');
+            const iconEl = document.getElementById('toast-icon');
+
+            msgEl.innerText = msg;
+            if (type === 'error') {
+                iconEl.className = "fa-solid fa-circle-xmark text-red-400 text-lg";
+                toast.classList.remove('border-slate-700');
+                toast.classList.add('border-red-500');
+            } else {
+                iconEl.className = "fa-solid fa-circle-check text-emerald-400 text-lg";
+                toast.classList.remove('border-red-500');
+                toast.classList.add('border-slate-700');
+            }
+
+            toast.classList.remove('translate-y-24', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-24', 'opacity-0');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
+```
+eof
